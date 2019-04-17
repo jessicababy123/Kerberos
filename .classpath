@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="KerberosAS/src"/>
+	<classpathentry kind="src" path="KerberosClientModel/src"/>
+	<classpathentry kind="src" path="KerberosServerModel/src"/>
+	<classpathentry kind="src" path="KerberosTGS/src"/>
+	<classpathentry kind="lib" path="C:/Users/1/Desktop/新建文件夹 (2)/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/1/Desktop/新建文件夹 (2)/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/1/Desktop/新建文件夹 (2)/commons-lang-2.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/1/Desktop/新建文件夹 (2)/commons-logging.jar"/>
+	<classpathentry kind="lib" path="C:/Users/1/Desktop/新建文件夹 (2)/ezmorph-1.0.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/1/Desktop/新建文件夹 (2)/json-lib-2.4-jdk15.jar"/>
+	<classpathentry kind="output" path="KerberosAS/bin"/>
+</classpath>
