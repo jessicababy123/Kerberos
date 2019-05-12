@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="G:/Users/whua/Workspaces/MyEclipse 8.5/jar/org.apache.commons.cli_1.2.0.v201011021000.jar/org.apache.commons.cli_1.2.0.v201011021000.jar"/>
-	<classpathentry kind="lib" path="G:/Users/whua/Workspaces/MyEclipse 8.5/jar/mysql-connector-java-5.1.18/mysql-connector-java-5.1.18-bin.jar"/>
-	<classpathentry kind="lib" path="G:/Users/whua/Workspaces/MyEclipse 8.5/jar/json-lib-2.4-jdk15.jar所需全部JAR包/commons-beanutils-1.8.0.jar"/>
-	<classpathentry kind="lib" path="G:/Users/whua/Workspaces/MyEclipse 8.5/jar/json-lib-2.4-jdk15.jar所需全部JAR包/commons-collections-3.2.1.jar"/>
-	<classpathentry kind="lib" path="G:/Users/whua/Workspaces/MyEclipse 8.5/jar/json-lib-2.4-jdk15.jar所需全部JAR包/commons-lang-2.5.jar"/>
-	<classpathentry kind="lib" path="G:/Users/whua/Workspaces/MyEclipse 8.5/jar/json-lib-2.4-jdk15.jar所需全部JAR包/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="G:/Users/whua/Workspaces/MyEclipse 8.5/jar/json-lib-2.4-jdk15.jar所需全部JAR包/ezmorph-1.0.6.jar"/>
-	<classpathentry kind="lib" path="G:/Users/whua/Workspaces/MyEclipse 8.5/jar/json-lib-2.4-jdk15.jar所需全部JAR包/json-lib-2.4-jdk15.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
+		<accessrules>
+			<accessrule kind="accessible" pattern="**"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/h/Desktop/jar/jar/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/h/Desktop/jar/jar/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/h/Desktop/jar/jar/commons-lang-2.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/h/Desktop/jar/jar/commons-logging.jar"/>
+	<classpathentry kind="lib" path="C:/Users/h/Desktop/jar/jar/ezmorph-1.0.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/h/Desktop/jar/jar/json-lib-2.4-jdk15.jar"/>
+	<classpathentry kind="lib" path="C:/Users/h/Desktop/jar/jar/mysql-connector-java-8.0.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/h/Desktop/jar/jar/org-apache-commons-codec.jar"/>
+	<classpathentry kind="lib" path="C:/Users/h/Desktop/jar/jar/protobuf-java-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
