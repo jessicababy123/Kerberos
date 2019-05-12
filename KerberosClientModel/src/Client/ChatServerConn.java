@@ -14,7 +14,7 @@ public class ChatServerConn extends SocketConn {
 	private ChatServerConn(){
 		socket = null;
 		try {
-			chatConn = new Socket("192.168.0.1", 9999);
+			chatConn = new Socket("192.168.43.252", 9999);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -9,7 +9,7 @@ public class ASConn extends SocketConn {
 	public ASConn(){
 		try {
 //			System.out.println("AS ready");
-			socket = new Socket("192.168.9.1", 52036);
+			socket = new Socket("192.168.43.59", 52036);
 			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block

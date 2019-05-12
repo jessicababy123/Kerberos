@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public abstract class SocketConn {
 	
-	final static int port = 52036;
+	final static int port = 8888;
 	
 	final static int MAX_SIZE = 8216;
 	

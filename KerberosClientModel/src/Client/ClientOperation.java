@@ -11,11 +11,14 @@ import Message.Message;
 import Security.DES.Des;
 import Security.MD5.MD5;
 import Security.RSA.RSA;
+import wgl.Login;
 
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONTokener;
 
 public class ClientOperation {
+	static public String b1,b2,b3,b4;
+	static public byte[] receiveV=new byte[8216];
 	static byte[] sendBuffer = new byte[8216];
 	static byte[] receiveBuffer = new byte[8216];
 	static DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -60,6 +63,12 @@ public class ClientOperation {
 		
 		ConnManger cm = new ConnManger("as");
 		SocketConn conn = cm.getConn();
+		
+		
+		/*System.out.print("发送给AS的报文为：");
+		System.out.println(showPacket.Show(sendBuffer));*/
+		b1 = showPacket.Show(sendBuffer);
+		
 		conn.send(sendBuffer);
 		conn.receive(receiveBuffer);
 		try {
@@ -75,7 +84,7 @@ public class ClientOperation {
 		//从数据库中获取IDC的passwd，并用MD5得到解密钥匙
 		String passwdOfClient= pwd;
 		//调用MD5算法生成keyClient,用其加密后，用client的passwd对应的MD5解开
-		String keyClient = MD5.getStringMD5(passwdOfClient);;//用keyClient对ASToClient加密
+		String keyClient = MD5.getMD5(passwdOfClient);;//用keyClient对ASToClient加密
 		
 		ConnManger cm = new ConnManger("tgs");
 		SocketConn conn = cm.getConn();
@@ -118,7 +127,9 @@ public class ClientOperation {
 				byte[] erro={(byte)OVERTIME};
 				return erro;
 			}
-		} catch (ParseException e) {
+		} 
+		catch (ParseException e) 
+		{
 			e.printStackTrace();
 		}
 		
@@ -150,6 +161,8 @@ public class ClientOperation {
 		Message.setSourceID(sendBuffer, IDC);
 		Message.setType(sendBuffer, type);
 		Message.setMethod(sendBuffer, method);
+		
+		b2 = showPacket.Show1(sendBuffer);
 		
 		conn.send(sendBuffer);
 		conn.receive(receiveBuffer);
@@ -223,7 +236,7 @@ public class ClientOperation {
 		//生成client与PServer的会话钥
 		String str =  "asdhfafsfjhfaksfkooiij";
 		//生成定长的keyCAndTgs
-		String keyCAndPServer=MD5.getStringMD5(str);
+		String keyCAndPServer=MD5.getMD5(str);
 		
 		//用client和PServer的会话钥对AuthenticatorC进行加密
 		Des.setKey(keyCAndPServer);
@@ -244,10 +257,17 @@ public class ClientOperation {
 		Message.setType(sendBuffer, type);
 		Message.setMethod(sendBuffer, method);
 		
+		b3=showPacket.Show1(sendBuffer);
 		conn.send(sendBuffer);
 		
 		conn.receive(receiveBuffer);
 		
+		int i=0;
+		for(byte a:receiveBuffer)
+		{
+			receiveV[i]=a;
+			i++;
+		}
 		
 		byte[] contentPSEncipher = Message.getContent(receiveBuffer);
 		//用client和PServer的会话钥对contentPS解密
