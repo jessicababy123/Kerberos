@@ -25,7 +25,8 @@ import Security.RSA.RSA;
 //这是服务器的一个线程
 public class ServerThread implements Runnable{
 	 private Socket socket;
-	 private Logger log = Logger.getLogger("Connect-Status-Log"); //日志
+	 
+	 public static Logger log = Logger.getLogger("Connect-Status-Log"); //日志
 	 SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 	 private final long MAXTIME=100000;
 	 final static int MAX_SIZE = 8216;
@@ -54,10 +55,10 @@ public class ServerThread implements Runnable{
 				OutputStream socketOut = socket.getOutputStream();
 				socketOut.write(content);
 				socketOut.flush();
-				log.info("Messeag has been sent!");
+				log.info("Message has been sent!");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				log.warning("Fail to send Messeag due to IOException!");
+				log.warning("Fail to send Message due to IOException!");
 				e.printStackTrace();
 			}
 		}
@@ -67,10 +68,10 @@ public class ServerThread implements Runnable{
 			try {
 				InputStream socketIn = socket.getInputStream();
 				len = socketIn.read(result, 0, MAX_SIZE);
-				log.info("Messeag has been received!");
+				log.info("Message has been received!");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				log.warning("Fail to receive Messeag due to IOException!");
+				log.warning("Fail to receive Message due to IOException!");
 				e.printStackTrace();
 			}
 			return len;
@@ -148,7 +149,7 @@ public class ServerThread implements Runnable{
 		//生成client与PServer的会话钥
 		String str =  "asdhfafsfjhfaksfkooiij";
 		//生成定长的keyCAndTgs
-		String keyCAndPServer = MD5.getStringMD5(str);
+		String keyCAndPServer = MD5.getMD5(str);
 		
 		byte[] bt1 = null;
 		try {
@@ -209,6 +210,8 @@ public class ServerThread implements Runnable{
 
 		// 发送报文
 		send(message);
+		
+		
 		while((len = receive(message)) != -1){
 			try {
 				log.info(""+message.length);
@@ -264,7 +267,7 @@ public class ServerThread implements Runnable{
 					e.printStackTrace();
 				}
 				send(respond);
-				log.info("user "+ src +" is oline!");
+				log.info("user "+ src +" is online!");
 				break;
 			}
 			case ADD_FRIEND:{
@@ -294,7 +297,7 @@ public class ServerThread implements Runnable{
 			case OFF_LINE:{
 				clients.remove(src);
 				DBExcute.offline((int) src);
-				log.info("usre "+src+"offline!");
+				log.info("usr "+src+"offline!");
 				exit = true;
 				break;
 			}
@@ -304,6 +307,7 @@ public class ServerThread implements Runnable{
 					DBExcute.recordInformation(new Information(ServerForMultiClient.infoID++, new String(Message.getContent(message)), src, tar),1);
 					try {
 						message = Des.encrypt(message);
+						System.out.println("V收到的报文："+HexUtil.encodeToString(message));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -313,10 +317,10 @@ public class ServerThread implements Runnable{
 					}
 					clients.get(tar).put(message);
 					
-					send(Message.getRespondMessage(src, tar, (byte)type, (byte)SUCCEED, null));
+					//send(Message.getRespondMessage(src, tar, (byte)type, (byte)SUCCEED, null));
 				}else{//离线
 					DBExcute.recordInformation(new Information(ServerForMultiClient.infoID++, new String(Message.getContent(message)), src, tar),0);
-					send(Message.getRespondMessage(src, tar, (byte)type, (byte)OFFLINE_MSG, null));
+					//send(Message.getRespondMessage(src, tar, (byte)type, (byte)OFFLINE_MSG, null));
 				}
 				break;
 			}
