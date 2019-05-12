@@ -27,20 +27,28 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import Message.*;
 import Security.DES.Des;
+import Security.RSA.RSA;
 import APP.Application;
 import Databean.User;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.util.JSONTokener;
+
 
 
 public class GpChat extends JFrame implements ActionListener{
 
-	private User from;
+	public User from;
 	private JTextPane jtWord = new JTextPane();
 	private JTextPane TextPane = new JTextPane();
 	private JScrollPane scrollTex;
 	
 	private JButton Exit = new JButton();
 	private JButton Send = new JButton();
-	Border b = new LineBorder(Color.GRAY, 1); 
+	Border b = new LineBorder(Color.GRAY, 1);
+	public byte[] visa = new byte[10000];
+	public byte[] whole = new byte[10000];
+	public String k;
 	
 	public GpChat(final User from){
 		this.from = from;
@@ -80,8 +88,49 @@ public class GpChat extends JFrame implements ActionListener{
 						insert("  我:  " + words  + '\n',18);
 						jtWord.setText(null);  
 						byte[] message = Message.getRespondMessage(from.getId(), Application.user.getId(), (byte)1, Application.CHAT, words.getBytes());
+						
+						KeyList l=new KeyList();
+						String s=String.valueOf(Application.user.getId());
+						byte[] t;
 						try {
-							message = Des.encrypt(message);
+							t = new sun.misc.BASE64Decoder().decodeBuffer(s);
+							k=RSA.encrypt1(l.SK,l.byteMerger(t, l.An.getBytes()));					
+						} catch (IOException e2) {
+							// TODO Auto-generated catch block
+							e2.printStackTrace();
+						}
+						
+						String g="";
+						for(byte j:Message.getContent(message))
+						{
+							char z=(char)j;
+							g=g+z;
+						}
+						
+						JSONObject Json = new JSONObject();  
+						JSONArray JsonArray = new JSONArray();  
+						  
+						Json.put("main", g);//JSONObject对象中添加键值对  
+						Json.put("sign", k);
+						JsonArray.add(Json);//将JSONObject对象添加到Json数组中  
+						
+//						JSONArray a=new JSONArray();
+//						a.add(g);
+//						a.add(k);
+//						
+						
+						JSONObject js1 = new JSONObject();
+						js1.put("main", g);
+						js1.put("sign", k);
+						System.out.println("Transfer:"+js1);
+						Message.setContent(whole,js1.toString().getBytes());
+						Message.setTargetID(whole, from.getId());
+						Message.setMethod(whole, Application.CHAT);
+						Message.setSourceID(whole, Application.user.getId());
+						Message.setType(whole, (byte)1);
+						
+						try {
+							message = Des.encrypt(whole);
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -139,8 +188,36 @@ public class GpChat extends JFrame implements ActionListener{
 				jtWord.setText("");
 				//此处是消息发送逻辑
 				byte[] message = Message.getRespondMessage(from.getId(), Application.user.getId(), (byte)1, Application.CHAT, words.getBytes());
+				
+				KeyList l=new KeyList();
+				String s=String.valueOf(Application.user.getId());
+				byte[] t;
 				try {
-					message = Des.encrypt(message);
+					t = new sun.misc.BASE64Decoder().decodeBuffer(s);
+					k=RSA.encrypt1(l.SK,l.byteMerger(t, l.An.getBytes()));					
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				
+				String h="";
+				for(byte j:Message.getContent(message))
+				{
+					char z=(char)j;
+					h=h+z;
+				}
+				
+				JSONObject js1 = new JSONObject();
+				js1.put("main", h);
+				js1.put("sign", k);
+				Message.setContent(whole, js1.toString().getBytes());
+				Message.setTargetID(whole, from.getId());
+				Message.setMethod(whole, Application.CHAT);
+				Message.setSourceID(whole, Application.user.getId());
+				Message.setType(whole, (byte)1);
+				
+				try {
+					message = Des.encrypt(whole);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

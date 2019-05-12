@@ -22,13 +22,16 @@ import javax.swing.border.LineBorder;
 
 import APP.Application;
 import Client.ConnManger;
+import Client.HexUtil;
 import Client.SocketConn;
+import Client.showPacket;
 import Client.PrepareConn;
 import Databean.User;
 import Message.*;
 import Security.DES.Des;
 
-public class Login extends JFrame implements ActionListener{
+public class Login extends JFrame implements ActionListener
+{
 
 	/**
 	 * 
@@ -41,11 +44,13 @@ public class Login extends JFrame implements ActionListener{
 	private JPasswordField jp=new JPasswordField(20);
 	private JButton xa=new JButton();
 	private JButton xb=new JButton();
+	static textpass tp = new textpass();
 	
-	public Login(){
+	public Login()
+	{
 		this.setResizable(false); 		//不能修改大小
 		this.getContentPane().setLayout(null);
-		this.setTitle("登陆");
+		this.setTitle("登录");
 		this.setSize(450,350);
 		
 		//设置运行位置，是对话框居中
@@ -53,7 +58,7 @@ public class Login extends JFrame implements ActionListener{
 		this.setLocation((int)(screenSize.width-350)/2,(int)(screenSize.height-600)/2+45);
 		
 		back=new JLabel();
-		ImageIcon icon=new ImageIcon(this.getClass().getResource("登陆.jpg"));
+		ImageIcon icon=new ImageIcon(this.getClass().getResource("登录.jpg"));
 		back.setIcon(icon);
 		back.setBounds(-0, 0, 450, 350);
 		
@@ -111,13 +116,17 @@ public class Login extends JFrame implements ActionListener{
 		this.setVisible(true);
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		// TODO Auto-generated method stub
 		new Login();
+		tp.setVisible(true);
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e) 
+	{
+		Constant ct = new Constant();
 		// TODO Auto-generated method stub
 		if(e.getSource()==xa){//点击的按钮是登录	
 			
@@ -127,12 +136,13 @@ public class Login extends JFrame implements ActionListener{
 			
 			String Content=usr+password;
 			
-			if(usr.equals("")||password.equals("")){
+			if(usr.equals("")||password.equals(""))
+			{
 				//System.out.println("请输入完整信息!");
 				JOptionPane.showMessageDialog(null, "请输入完整信息!");
 			}
-			else{
-				
+			else
+			{
 				xb.setVisible(false);
 				xa.setText("正在登陆...");
 				xa.setBounds(95, 200, 150, 30);
@@ -141,17 +151,35 @@ public class Login extends JFrame implements ActionListener{
 				long usrId = Long.parseLong(jt.getText());
 				boolean goon = false;
 				try {
-					if(PrepareConn.returnKerberos(usrId, password)){
+					if(PrepareConn.returnKerberos(usrId, password,ct))
+					{
+						//StringBuffer Str = new StringBuffer();
+						String s1 = showPacket.Show1(ct.Rec1);
+						String s2=showPacket.Show1(ct.Rec2);
+						String s3=showPacket.Show1(ct.Rec3);
+						
+						tp.ja1.append("C发送给AS的报文为："+"\n"+ct.send1+"\n"+"AS发送给C的报文为："+"\n"+s1);
+						tp.ja2.append("C发送给TGS的报文为："+"\n"+ct.send2+"\n"+"TGS发送给c的报文为："+"\n"+s2);
+						tp.ja3.append("C发送给V的报文为："+"\n"+ct.send3+"\n"+"V发送给c的报文为："+"\n"+s3);
+						/*for(byte b: ct.Rec1)
+						{
+							Str.append(b); //依次读取数组的元素
+						}
+						tp.ja1.setText(Str.toString());*/
 						goon = true;
-					}else{
+					}
+					else
+					{
 						JOptionPane.showMessageDialog(null, "认证错误!");
 					}
-					
-				} catch (Exception e2) {
+				} 
+				catch (Exception e2) 
+				{
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
-				if(goon){
+				if(goon)
+				{
 				Application.cm = new ConnManger("chatserver");
 				SocketConn conn = Application.cm.getConn();
 				if(conn == null){
@@ -159,49 +187,69 @@ public class Login extends JFrame implements ActionListener{
 				}
 				byte[] buffer = new byte[8216];
 				byte[] message = Message.getRespondMessage(Application.PSERVERCHAT, usrId, (byte)1, Application.ON_LINE, null);
-				try {
+				try 
+				{
 					System.out.println(new String(message));
 					message = Des.encrypt(message); //Des加密
-				} catch (IOException e1) {
+				} 
+				catch (IOException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} catch (Exception e1) {
+				} 
+				catch (Exception e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				conn.send(message);
 				conn.receive(buffer);
-				try {
+				try 
+				{
 					buffer = Des.decrypt(buffer); //Des解密
-				} catch (IOException e1) {
+				} 
+				catch (IOException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} catch (Exception e1) {
+				} 
+				catch (Exception e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				if(Message.getRespond(buffer) == Application.SUCCESS){
+				if(Message.getRespond(buffer) == Application.SUCCESS)
+				{
 					Application.user = new User(usrId, new String(Message.getContent(buffer)));
 					
 					message = Message.getRespondMessage(Application.PSERVERCHAT, usrId, (byte)1, Application.GET_FRIEND, null);
-					try {
+					try 
+					{
 						
 						message = Des.encrypt(message); //Des加密
-					} catch (IOException e1) {
+					} catch (IOException e1) 
+					{
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					} catch (Exception e1) {
+					} 
+					catch (Exception e1) 
+					{
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					conn.send(message);
 					conn.receive(buffer);
-					try {
+					try 
+					{
 						buffer = Des.decrypt(buffer); //Des解密
-					} catch (IOException e1) {
+					} 
+					catch (IOException e1) 
+					{
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					} catch (Exception e1) {
+					} 
+					catch (Exception e1) 
+					{
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
@@ -209,14 +257,15 @@ public class Login extends JFrame implements ActionListener{
 					List<User> user = ContentTool.getUsser(Message.getContent(buffer));
 					Chat main =  Chat.getInstance(Application.user.getName(),user);
 				}
-				else{//出错提示
+				else
+				{//出错提示
 					JOptionPane.showMessageDialog(null, "服务器返回一个错误!");
 				}
-				
 				}
 			}
 		}
-		else if(e.getSource()==xb){//点击的按钮是b2
+		else if(e.getSource()==xb)
+		{//点击的按钮是b2
 			new Regist();
 			setVisible(false);
 		}

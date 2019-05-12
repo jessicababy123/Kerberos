@@ -81,7 +81,7 @@ public class Chat extends JFrame {
 		top=new JLabel();
 		ImageIcon icon=new ImageIcon(this.getClass().getResource("Ö÷Ìâ.jpg"));
 		top.setIcon(icon);
-		top.setBounds(0,-150, 450, 400);
+		top.setBounds(-100,-100, 450, 400);
 		
 		
 		body=new JLabel();
