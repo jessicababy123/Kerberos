@@ -144,7 +144,7 @@ public class TGS implements Runnable{
 			//给定client与tgs的会话钥
 			String string =  "ijksdahtuirwehy";
 			//生成定长的keyCAndTgs
-			String keyCAndTgs=MD5.getStringMD5(string);
+			String keyCAndTgs=MD5.getMD5(string);
 			
 			byte[] bt1 = new sun.misc.BASE64Decoder().decodeBuffer(AuthenticatorEncipher);
 			//用keyCAndTgs对AuthenticatorEncipher解密，解密后返回String类型AuthenticatorC
@@ -197,7 +197,7 @@ public class TGS implements Runnable{
 			//生成client与PServer的会话钥
 			String str =  "asdhfafsfjhfaksfkooiij";
 			//生成定长的keyCAndTgs
-			String keyCAndPServer=MD5.getStringMD5(str);
+			String keyCAndPServer=MD5.getMD5(str);
 			
 			Date date=new Date();
 			String timeStampInTicketPServer=format.format(date);//时间戳
