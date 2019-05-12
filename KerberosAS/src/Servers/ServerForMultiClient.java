@@ -26,13 +26,16 @@ public class ServerForMultiClient {
                 socket=serverSocket.accept();
                 executorService.execute(new AS(socket));
                 
-            } catch (Exception e) {
+            } 
+            catch (Exception e) 
+            {
                 e.printStackTrace();
             }
         }
     }
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException 
+    {
         new ServerForMultiClient().service();
     }
 }

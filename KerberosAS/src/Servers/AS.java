@@ -43,30 +43,39 @@ public class AS implements Runnable{
 	 
 	 final static int MAX_SIZE = 8216;
 	 
-	 public AS(Socket socket){
+	 public AS(Socket socket)
+	 {
 		 this.socket=socket;
 	 }
 	 
-	 public void send(byte[] content){
-			try {
+	 public void send(byte[] content)
+	 {
+			try 
+			{
 				OutputStream socketOut = socket.getOutputStream();
 				socketOut.write(content);
 				socketOut.flush();
 				log.info("Message has been sent!");
-			} catch (IOException e) {
+			} 
+			catch (IOException e) 
+			{
 				// TODO Auto-generated catch block
 				log.warning("Fail to send Message due to IOException!");
 				e.printStackTrace();
 			}
-		}
+	 }
 	 
-	 public int receive(byte[] result){
+	 public int receive(byte[] result)
+	 {
 			int len = -1;
-			try {
+			try 
+			{
 				InputStream socketIn = socket.getInputStream();
 				len = socketIn.read(result, 0, MAX_SIZE);
 				log.info("Message has been received!");
-			} catch (IOException e) {
+			} 
+			catch (IOException e) 
+			{
 				// TODO Auto-generated catch block
 				log.warning("Fail to receive Message due to IOException!");
 				e.printStackTrace();
@@ -79,9 +88,12 @@ public class AS implements Runnable{
 	/**
 	 * 服务器逻辑
 	 */
-	public void run() {		
+	public void run() 
+	{		
+		//改成输出到文件
 		System.out.println("New connection accepted "+socket.getInetAddress()+":"+socket.getPort());
-		try {
+		try 
+		{
 			byte[] bytes = new byte[MAX_SIZE];//接收到的报文
 			int len = receive(bytes);//接收	
 			
@@ -100,7 +112,8 @@ public class AS implements Runnable{
 			String timeStamp = jsonObject.getString("timeStamp");
 
 			//判断IDTgs是否合法，否则
-			if (IDTgs!=TGS) {
+			if (IDTgs!=TGS) 
+			{
 				Message.setRespond(bytes, DENY);
 				Message.setTargetID(bytes, src);
 				Message.setSourceID(bytes, AS);
@@ -108,31 +121,34 @@ public class AS implements Runnable{
 				return;	
 			}
 			
-			
 			//判断是否超时
-			try {
+			try 
+			{
 				Date timeStampDate = format.parse(timeStamp);
 				long s = receiveTime.getTime() - timeStampDate.getTime();
-				if (s>MAXTIME) {
+				if (s>MAXTIME) 
+				{
 					Message.setRespond(bytes, OVERTIME);
 					Message.setTargetID(bytes, src);
 					Message.setSourceID(bytes, AS);
 					send(bytes);
 					return;
 				}
-			} catch (ParseException e) {
+			} 
+			catch (ParseException e) 
+			{
 				e.printStackTrace();
 			}
 			
 			//根据IDC从数据库获取C的paasswd
 			String passwdOfClient=DBExcute.getPasswd((int)IDC);
 			//调用MD5算法生成keyClient,用其加密后，用client的passwd解开
-			String keyClient = MD5.getStringMD5(passwdOfClient);;//用keyClient对ASToClient加密
+			String keyClient = MD5.getMD5(passwdOfClient);;//用keyClient对ASToClient加密
 			
 			//给定client与tgs的会话钥
 			String string =  "ijksdahtuirwehy";
 			//生成定长的keyCAndTgs
-			String keyCAndTgs=MD5.getStringMD5(string);
+			String keyCAndTgs=MD5.getMD5(string);
 			
 			Date date=new Date();
 			String timeStampInTicketTgs=format.format(date);//时间戳
@@ -151,7 +167,7 @@ public class AS implements Runnable{
 			//用tgs的公钥对ticketTgs进行非对称加密
 			byte temp[]=RSA.encrypt(RSA.TGSPublicKey, ticketTgs.toString().getBytes());
 			String ticketTgsEncipher = new sun.misc.BASE64Encoder().encodeBuffer(temp);
-
+			
 			// 封装ASToClient成一个json包
 			JSONObject ASToClient = new JSONObject();
 			ASToClient.put("keyCAndTgs", keyCAndTgs);
@@ -178,10 +194,14 @@ public class AS implements Runnable{
 			send(message);
 
 			socket.close();
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
